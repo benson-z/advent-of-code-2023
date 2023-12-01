@@ -7,7 +7,7 @@ fn main() {
     let mut total = 0;
 
     // Cache for previous characters
-    let mut cache: String = String::new();
+    let mut buffer: String = String::new();
 
     // list of all numbers as strings
     let numbers: Vec<&str> = vec![
@@ -29,7 +29,7 @@ fn main() {
 
             for c in line.chars() {
                 if c.is_digit(10) {
-                    cache.clear();
+                    buffer.clear();
 
                     let num: u32 = match c.to_digit(10) {
                         None => continue,
@@ -38,9 +38,9 @@ fn main() {
 
                     nums.push(num);
                 } else {
-                    cache += &c.to_string();
+                    buffer += &c.to_string();
 
-                    match numbers.iter().position(|n| cache.ends_with(n)) {
+                    match numbers.iter().position(|n| buffer.ends_with(n)) {
                         Some(n) => nums.push(n as u32),
                         None => continue,
                     }
