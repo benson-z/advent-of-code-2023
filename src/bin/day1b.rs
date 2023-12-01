@@ -6,6 +6,14 @@ fn main() {
     let filename = "input.txt";
     let mut total = 0;
 
+    // Cache for previous characters
+    let mut cache: String = String::new();
+
+    // list of all numbers as strings
+    let numbers: Vec<&str> = vec![
+        "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+    ];
+
     if let Ok(lines) = read_lines(filename) {
         // loop through lines
         for line in lines {
@@ -20,11 +28,23 @@ fn main() {
             let mut nums: Vec<u32> = Vec::new();
 
             for c in line.chars() {
-                let num: u32 = match c.to_digit(10) {
-                    None => continue,
-                    Some(n) => n,
-                };
-                nums.push(num);
+                if c.is_digit(10) {
+                    cache.clear();
+
+                    let num: u32 = match c.to_digit(10) {
+                        None => continue,
+                        Some(n) => n,
+                    };
+
+                    nums.push(num);
+                } else {
+                    cache += &c.to_string();
+
+                    match numbers.iter().position(|n| cache.ends_with(n)) {
+                        Some(n) => nums.push(n as u32),
+                        None => continue,
+                    }
+                }
             }
 
             let value = 10 * nums[0] + nums[nums.len() - 1];
